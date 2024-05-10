@@ -1,3 +1,5 @@
+using Booking.Infrastructure.Data;
+
 namespace Booking;
 
 public class Program
@@ -6,6 +8,9 @@ public class Program
     {
         #region Configure services
         var builder = WebApplication.CreateBuilder(args);
+
+        // Add services related to storage using the configuration specified
+        builder.Services.AddStorage(builder.Configuration);
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();

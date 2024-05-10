@@ -4,7 +4,7 @@ namespace Booking.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class RoomController : Controller
+    public class AccommodationController : Controller
     {
         public IActionResult Index()
         {
