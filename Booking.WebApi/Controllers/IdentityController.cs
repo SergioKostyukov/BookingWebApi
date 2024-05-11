@@ -34,26 +34,33 @@ namespace Booking.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterModel model)
         {
-            await _accountService.Create(new UserRegisterDto
+            try
             {
-                Name = model.Name,
-                PhoneNumber = model.PhoneNumber,
-                Email = model.Email,
-                Role = model.Role,
-                Password = model.Password,
-            });
+                await _accountService.Create(new UserRegisterDto
+                {
+                    Name = model.Name,
+                    PhoneNumber = model.PhoneNumber,
+                    Email = model.Email,
+                    Role = model.Role,
+                    Password = model.Password,
+                });
 
-            var userData = _accountService.GetUserIdentity(model.Name, model.Password);
+                var userData = _accountService.GetUserIdentity(model.Name, model.Password);
 
-            var token = _identityService.GenerateToken(userData);
+                var token = _identityService.GenerateToken(userData);
 
-            if (token.IsNullOrEmpty())
-            {
-                return BadRequest("Can't register this user");
+                if (token.IsNullOrEmpty())
+                {
+                    return BadRequest("Can't register this user");
+                }
+                else
+                {
+                    return Ok(new { Token = token });
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Ok(new { Token = token });
+                return StatusCode(500, "An error occurred while registering the user: " + ex.Message);
             }
         }
     }

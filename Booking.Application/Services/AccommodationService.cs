@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Booking.Application.Services;
 
 internal class AccommodationService(BookingDbContext dbContext,
-                            IMapper mapper) : IAccommodationService
+                                    IMapper mapper) : IAccommodationService
 {
     private readonly BookingDbContext _dbContext = dbContext;
     private readonly IMapper _mapper = mapper;
@@ -25,8 +25,7 @@ internal class AccommodationService(BookingDbContext dbContext,
     public async Task<AccommodationDto> Get(int id)
     {
         var accommodation = await _dbContext.Accommodations
-            .Where(h => h.Id == id)
-            .FirstOrDefaultAsync();
+            .FindAsync(id) ?? throw new InvalidOperationException("Accommodation not found");
 
         return _mapper.Map<AccommodationDto>(accommodation);
     }
@@ -56,11 +55,11 @@ internal class AccommodationService(BookingDbContext dbContext,
 
     public async Task Delete(int id)
     {
-        var accommodation = await _dbContext.Accommodations.FindAsync(id) ?? throw new InvalidOperationException("Accommodation not found");
+        var accommodation = await _dbContext.Accommodations
+            .FindAsync(id) ?? throw new InvalidOperationException("Accommodation not found");
 
         _dbContext.Accommodations.Remove(accommodation);
 
         await _dbContext.SaveChangesAsync();
     }
-
 }

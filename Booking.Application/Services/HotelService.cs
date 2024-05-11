@@ -32,8 +32,7 @@ internal class HotelService(BookingDbContext dbContext,
     public async Task<HotelDto> Get(int id)
     {
         var hotel = await _dbContext.Hotels
-            .Where(h => h.Id == id)
-            .FirstOrDefaultAsync();
+            .FindAsync(id) ?? throw new InvalidOperationException("Hotel not found");
 
         return _mapper.Map<HotelDto>(hotel);
     }
@@ -62,7 +61,8 @@ internal class HotelService(BookingDbContext dbContext,
 
     public async Task Delete(int id)
     {
-        var hotel = await _dbContext.Hotels.FindAsync(id) ?? throw new InvalidOperationException("Hotel not found");
+        var hotel = await _dbContext.Hotels
+            .FindAsync(id) ?? throw new InvalidOperationException("Hotel not found");
 
         _dbContext.Hotels.Remove(hotel);
 

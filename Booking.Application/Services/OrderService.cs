@@ -24,36 +24,33 @@ internal class OrderService(BookingDbContext dbContext,
 
     public async Task<List<OrderViewDto>> GetListOrdersToMe(int userId)
     {
-        var hotels = await _dbContext.Hotels
-            .Where(h => h.ManagerId == userId)
-            .Select(h => h.Id)
-            .ToListAsync();
-
-        var orders = await _dbContext.Orders
-           .Where(x => hotels.Contains(x.HotelId))
-           .ToListAsync();
-
-        //        var orders = await (
-        //    from hotel in _dbContext.Hotels
-        //    join order in _dbContext.Orders on hotel.Id equals order.HotelId
-        //    where hotel.ManagerId == userId
-        //    select order
-        //).ToListAsync();
+        var orders = await (
+            from hotel in _dbContext.Hotels
+            join order in _dbContext.Orders on hotel.Id equals order.HotelId
+            where hotel.ManagerId == userId
+            select order
+        ).ToListAsync();
 
         return _mapper.Map<List<OrderViewDto>>(orders);
     }
 
     public async Task<(OrderDto, List<OrderListDto>)> Get(int id)
     {
-        var order = await _dbContext.Orders
-            .Where(h => h.Id == id)
-            .FirstOrDefaultAsync();
+        var orderData = await (
+            from order in _dbContext.Orders
+            join orderItem in _dbContext.OrdersLists on order.Id equals orderItem.OrderId into orderItemsGroup
+            where order.Id == id
+            select new
+            {
+                Order = order,
+                OrderItems = orderItemsGroup.ToList()
+            }
+        ).FirstOrDefaultAsync() ?? throw new InvalidOperationException("Order not found");
 
-        var orderItems = await _dbContext.OrdersLists
-            .Where(o => o.OrderId == id)
-            .ToListAsync();
+        var orderDto = _mapper.Map<OrderDto>(orderData.Order);
+        var orderListDtos = _mapper.Map<List<OrderListDto>>(orderData.OrderItems);
 
-        return (_mapper.Map<OrderDto>(order), _mapper.Map<List<OrderListDto>>(orderItems));
+        return (orderDto, orderListDtos);
     }
 
     public async Task Add(OrderAddDto request)
@@ -163,7 +160,8 @@ internal class OrderService(BookingDbContext dbContext,
 
     public async Task Delete(int id)
     {
-        var order = await _dbContext.Orders.FindAsync(id) ?? throw new InvalidOperationException("Order not found");
+        var order = await _dbContext.Orders
+            .FindAsync(id) ?? throw new InvalidOperationException("Order not found");
 
         await _dbContext.OrdersLists
                 .Where(o => o.OrderId == id)

@@ -1,7 +1,5 @@
-﻿using Azure.Core;
-using Booking.Application.Dto;
+﻿using Booking.Application.Dto;
 using Booking.Application.Interfaces;
-using Booking.Core.Entities;
 using Booking.WebApi.Identity;
 using Booking.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;

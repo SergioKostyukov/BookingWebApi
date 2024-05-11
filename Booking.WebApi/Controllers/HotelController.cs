@@ -4,7 +4,6 @@ using Booking.WebApi.Identity;
 using Booking.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics.Metrics;
 
 namespace Booking.WebApi.Controllers
 {

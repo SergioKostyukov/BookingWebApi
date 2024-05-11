@@ -37,6 +37,12 @@ internal class AccountService(BookingDbContext dbContext,
         request.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
         request.Email = request.Email.ToLower();
 
+        bool isNameUnique = await _dbContext.Users.AllAsync(u => u.Name != request.Name);
+        if (!isNameUnique)
+        {
+            throw new Exception("User with this name already exists.");
+        }
+
         var user = _mapper.Map<User>(request);
         user.CreatedDate = DateTime.UtcNow;
 
