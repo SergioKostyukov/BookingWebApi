@@ -45,7 +45,7 @@ namespace Booking.WebApi.Controllers
 
         [HttpPost]
         [Authorize(Policy = IdentityConstants.ManagerUserPolicyName)]
-        public async Task<IActionResult> Add(AddHotelModel request)
+        public async Task<IActionResult> Add(AddHotelModel model)
         {
             string? userId = _httpContextAccessor.HttpContext?.User.FindFirst("UserId")?.Value
                 ?? throw new InvalidOperationException("User not found");
@@ -53,12 +53,12 @@ namespace Booking.WebApi.Controllers
             await _hotelService.Add(new HotelAddDto
             {
                 ManagerId = int.Parse(userId),
-                Name = request.Name,
-                Type = request.Type,
-                Description = request.Description,
-                Country = request.Country,
-                City = request.City,
-                Address = request.Address,
+                Name = model.Name,
+                Type = model.Type,
+                Description = model.Description,
+                Country = model.Country,
+                City = model.City,
+                Address = model.Address,
             });
 
             return Ok();

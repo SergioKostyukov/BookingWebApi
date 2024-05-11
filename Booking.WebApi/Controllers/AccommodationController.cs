@@ -31,16 +31,16 @@ namespace Booking.WebApi.Controllers
 
         [HttpPost]
         [Authorize(Policy = IdentityConstants.ManagerUserPolicyName)]
-        public async Task<IActionResult> Add(AddAccommodationModel request)
+        public async Task<IActionResult> Add(AddAccommodationModel model)
         {
             await _accommodationService.Add(new AccommodationAddDto
             {
-                HotelId = request.HotelId,
-                Name = request.Name,
-                Type = request.Type,
-                Description = request.Description,
-                Price = request.Price
-            }, request.Numder);
+                HotelId = model.HotelId,
+                Name = model.Name,
+                Type = model.Type,
+                Description = model.Description,
+                Price = model.Price
+            }, model.Numder);
 
             return Ok();
         }

@@ -34,11 +34,9 @@ internal class AccommodationService(BookingDbContext dbContext,
 
     public async Task Add(AccommodationAddDto request, int numder)
     {
-        var accommodation = _mapper.Map<Accommodation>(request);
-
         for (int i = 0; i < numder; i++)
         {
-            await _dbContext.Accommodations.AddAsync(accommodation);
+            await _dbContext.Accommodations.AddAsync(_mapper.Map<Accommodation>(request));
         }
 
         await _dbContext.SaveChangesAsync();

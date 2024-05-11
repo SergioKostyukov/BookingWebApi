@@ -53,5 +53,4 @@ internal class HotelService(BookingDbContext dbContext,
 
         await _dbContext.SaveChangesAsync();
     }
-
 }

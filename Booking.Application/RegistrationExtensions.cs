@@ -13,6 +13,7 @@ public static class RegistrationExtensions
         services.AddAutoMapper(typeof(UserProfile));
         services.AddAutoMapper(typeof(HotelProfile));
         services.AddAutoMapper(typeof(AccommodationProfile));
+        services.AddAutoMapper(typeof(OrderProfile));
 
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IAccountService, AccountService>();
