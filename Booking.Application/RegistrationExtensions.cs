@@ -11,6 +11,7 @@ public static class RegistrationExtensions
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddAutoMapper(typeof(UserProfile));
+        services.AddAutoMapper(typeof(HotelProfile));
 
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IAccountService, AccountService>();

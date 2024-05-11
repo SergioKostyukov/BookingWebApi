@@ -34,9 +34,8 @@ namespace Booking.Infrastructure.Data.EntityTypeConfiguration
             
             builder.Property(x => x.Address)
                .IsRequired();
-            
-            builder.Property(x => x.Rating)
-               .IsRequired();
+
+            builder.Property(x => x.Rating);
         }
     }
 }

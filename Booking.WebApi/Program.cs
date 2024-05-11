@@ -46,6 +46,8 @@ public class Program
                 policy => policy.RequireClaim(ClaimTypes.Role, IdentityConstants.ClientUserClaimName));
         });
 
+        builder.Services.AddHttpContextAccessor();
+
         builder.Services.AddServices(builder.Configuration);
 
         builder.Services.AddControllers();

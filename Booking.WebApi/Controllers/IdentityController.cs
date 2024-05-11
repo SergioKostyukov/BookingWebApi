@@ -1,6 +1,5 @@
 ﻿using Booking.Application.Dto;
 using Booking.Application.Interfaces;
-using Booking.Core.Enums;
 using Booking.WebApi.Models.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;

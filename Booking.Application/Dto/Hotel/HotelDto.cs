@@ -1,8 +1,8 @@
 ﻿using Booking.Core.Enums;
 
-namespace Booking.Core.Entities;
+namespace Booking.Application.Dto;
 
-public class Hotel
+public class HotelDto
 {
     public int Id { get; set; }
     public int ManagerId { get; set; }
@@ -12,5 +12,5 @@ public class Hotel
     public string Country { get; set; } = string.Empty;
     public string City { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;
-    public float? Rating { get; set; }
+    public float Rating { get; set; }
 }

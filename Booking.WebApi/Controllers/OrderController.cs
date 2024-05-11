@@ -6,7 +6,7 @@ namespace Booking.WebApi.Controllers
     [Route("api/[controller]/[action]")]
     public class OrderController : ControllerBase
     {
-        [HttpGet("GetOrder")]
+        [HttpGet]
         public IActionResult Index()
         {
             return Ok();

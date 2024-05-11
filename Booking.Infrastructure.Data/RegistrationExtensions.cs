@@ -12,10 +12,7 @@ public static class RegistrationExtensions
         {
             options.UseSqlServer(
                 configuration["ConnectionStrings:DefaultConnectionString"],
-                options =>
-                {
-                    options.MigrationsAssembly(typeof(BookingDbContext).Assembly.FullName);
-                });
+                options => options.MigrationsAssembly(typeof(BookingDbContext).Assembly.FullName));
         });
     }
 }
