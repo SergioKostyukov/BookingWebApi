@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Booking.Application.Dto;
 
 namespace Booking.Application.Interfaces
 {
-    internal interface IIdentityService
+    public interface IIdentityService
     {
+        public string GenerateToken(UserIdentityDto request);
     }
 }

@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Booking.Infrastructure.Data\Booking.Infrastructure.Data.csproj" />
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="BCrypt.Net" Version="0.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dto\" />
-    <Folder Include="MappingProfiles\" />
+    <ProjectReference Include="..\Booking.Infrastructure.Data\Booking.Infrastructure.Data.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,14 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.WebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class AccountController : Controller
+    [Authorize]
+    [Route("api/[controller]/[action]")]
+    public class AccountController : ControllerBase
     {
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult Get()
         {
-            return View();
+            return Ok();
         }
     }
 }

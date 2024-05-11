@@ -3,12 +3,13 @@
 namespace Booking.WebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class AccommodationController : Controller
+    [Route("api/[controller]/[action]")]
+    public class AccommodationController : ControllerBase
     {
+        [HttpGet("GetAccommodation")]
         public IActionResult Index()
         {
-            return View();
+            return Ok();
         }
     }
 }
