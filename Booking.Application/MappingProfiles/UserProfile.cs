@@ -10,6 +10,7 @@ namespace Booking.Application.MappingProfiles
         {
             CreateMap<User, UserIdentityDto>();
             CreateMap<UserRegisterDto, User>();
+            CreateMap<User, UserDto>();
         }
     }
 }

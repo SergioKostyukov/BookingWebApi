@@ -4,6 +4,7 @@ using Booking.WebApi.Identity;
 using Booking.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.Metrics;
 
 namespace Booking.WebApi.Controllers
 {
@@ -66,8 +67,18 @@ namespace Booking.WebApi.Controllers
 
         [HttpPut]
         [Authorize(Policy = IdentityConstants.ManagerUserPolicyName)]
-        public IActionResult Edit()
+        public async Task<IActionResult> Update(UpdateHotelModel model)
         {
+            await _hotelService.Update(new HotelUpdateDto(
+               Id: model.Id,
+               Name: model.Name,
+               Type: model.Type,
+               Description: model.Description,
+               Country: model.Country,
+               City: model.City,
+               Address: model.City
+           ));
+
             return Ok();
         }
 

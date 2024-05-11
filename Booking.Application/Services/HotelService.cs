@@ -45,6 +45,21 @@ internal class HotelService(BookingDbContext dbContext,
         await _dbContext.SaveChangesAsync();
     }
 
+    public async Task Update(HotelUpdateDto request)
+    {
+        var hotel = await _dbContext.Hotels
+            .FindAsync(request.Id) ?? throw new InvalidOperationException("Hotel not found");
+
+        hotel.Name = request.Name;
+        hotel.Type = request.Type;
+        hotel.Description = request.Description;
+        hotel.Country = request.Country;
+        hotel.City = request.City;
+        hotel.Address = request.Address;
+
+        await _dbContext.SaveChangesAsync();
+    }
+
     public async Task Delete(int id)
     {
         var hotel = await _dbContext.Hotels.FindAsync(id) ?? throw new InvalidOperationException("Hotel not found");

@@ -47,8 +47,16 @@ namespace Booking.WebApi.Controllers
 
         [HttpPut]
         [Authorize(Policy = IdentityConstants.ManagerUserPolicyName)]
-        public IActionResult Edit()
+        public async Task<IActionResult> Update(UpdateAccommodationModel model)
         {
+           await _accommodationService.Update(new AccommodationUpdateDto(
+               Id: model.Id,
+               Name: model.Name,
+               Type: model.Type,
+               Description: model.Description, 
+               Price: model.Price
+           ));
+
             return Ok();
         }
 

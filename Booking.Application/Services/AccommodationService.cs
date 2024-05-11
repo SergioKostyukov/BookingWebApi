@@ -4,7 +4,6 @@ using Booking.Application.Interfaces;
 using Booking.Core.Entities;
 using Booking.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Booking.Application.Services;
 
@@ -38,6 +37,19 @@ internal class AccommodationService(BookingDbContext dbContext,
         {
             await _dbContext.Accommodations.AddAsync(_mapper.Map<Accommodation>(request));
         }
+
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task Update(AccommodationUpdateDto request)
+    {
+        var accommodation = await _dbContext.Accommodations
+            .FindAsync(request.Id) ?? throw new InvalidOperationException("Accommodation not found");
+
+        accommodation.Name = request.Name;
+        accommodation.Type = request.Type;
+        accommodation.Description = request.Description;
+        accommodation.Price = request.Price;
 
         await _dbContext.SaveChangesAsync();
     }

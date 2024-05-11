@@ -3,6 +3,7 @@ using Booking.Application.Dto;
 using Booking.Application.Interfaces;
 using Booking.Core.Entities;
 using Booking.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Application.Services;
 
@@ -40,6 +41,24 @@ internal class AccountService(BookingDbContext dbContext,
         user.CreatedDate = DateTime.UtcNow;
 
         _dbContext.Users.Add(user);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<UserDto> Get(int id)
+    {
+        var user = await _dbContext.Users
+            .Where(u => u.Id == id)
+            .FirstOrDefaultAsync();
+
+        return _mapper.Map<UserDto>(user);
+    }
+
+    public async Task Delete(int id)
+    {
+        var user = await _dbContext.Users.FindAsync(id) ?? throw new InvalidOperationException("User not found");
+
+        _dbContext.Users.Remove(user);
+
         await _dbContext.SaveChangesAsync();
     }
 }

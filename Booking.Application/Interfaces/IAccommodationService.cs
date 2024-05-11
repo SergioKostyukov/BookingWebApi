@@ -7,6 +7,7 @@ namespace Booking.Application.Interfaces
         Task<List<AccommodationViewDto>> GetList(int hotelId);
         Task<AccommodationDto> Get(int id);
         Task Add(AccommodationAddDto request, int numder);
+        Task Update(AccommodationUpdateDto request);
         Task Delete(int id);
     }
 }
