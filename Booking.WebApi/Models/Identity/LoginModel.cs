@@ -1,6 +1,4 @@
-﻿using Booking.Core.Enums;
-
-namespace Booking.WebApi.Models.Identity;
+﻿namespace Booking.WebApi.Models;
 
 public class LoginModel
 {

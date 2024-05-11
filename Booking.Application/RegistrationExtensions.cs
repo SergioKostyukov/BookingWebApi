@@ -12,10 +12,12 @@ public static class RegistrationExtensions
     {
         services.AddAutoMapper(typeof(UserProfile));
         services.AddAutoMapper(typeof(HotelProfile));
+        services.AddAutoMapper(typeof(AccommodationProfile));
 
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IHotelService, HotelService>();
+        services.AddScoped<IAccommodationService, AccommodationService>();
         services.AddScoped<IOrderService, OrderService>();
 
         return services;

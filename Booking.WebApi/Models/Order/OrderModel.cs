@@ -1,6 +1,5 @@
-﻿namespace Booking.WebApi.Models.Order
+﻿namespace Booking.WebApi.Models;
+
+public class OrderModel
 {
-    public class OrderModel
-    {
-    }
 }

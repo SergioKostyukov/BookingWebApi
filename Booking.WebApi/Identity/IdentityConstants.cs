@@ -9,4 +9,5 @@ public class IdentityConstants
     public const string AdminUserPolicyName = "Admin";
     public const string ManagerUserPolicyName = "Manager";
     public const string ClientUserPolicyName = "Client";
+    public const string ClientOrManagerUserPolicyName = "ClientOrManagerPolicy";
 }

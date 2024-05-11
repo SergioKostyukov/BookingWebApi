@@ -1,7 +1,7 @@
 ﻿using Booking.Application.Dto;
 using Booking.Application.Interfaces;
 using Booking.WebApi.Identity;
-using Booking.WebApi.Models.Hotel;
+using Booking.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +9,7 @@ namespace Booking.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class HotelController(IHttpContextAccessor httpContextAccessor, 
+    public class HotelController(IHttpContextAccessor httpContextAccessor,
                                  IHotelService hotelService) : ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
@@ -19,6 +19,18 @@ namespace Booking.WebApi.Controllers
         public async Task<IActionResult> GetList()
         {
             var hotels = await _hotelService.GetList();
+
+            return Ok(new { Hotels = hotels });
+        }
+
+        [HttpGet]
+        [Authorize(Policy = IdentityConstants.ManagerUserPolicyName)]
+        public async Task<IActionResult> GetMyHotelsList()
+        {
+            string? userId = _httpContextAccessor.HttpContext?.User.FindFirst("UserId")?.Value
+                ?? throw new InvalidOperationException("User not found");
+
+            var hotels = await _hotelService.GetListByUserId(int.Parse(userId));
 
             return Ok(new { Hotels = hotels });
         }
@@ -38,7 +50,8 @@ namespace Booking.WebApi.Controllers
             string? userId = _httpContextAccessor.HttpContext?.User.FindFirst("UserId")?.Value
                 ?? throw new InvalidOperationException("User not found");
 
-            await _hotelService.Add(new HotelAddDto { 
+            await _hotelService.Add(new HotelAddDto
+            {
                 ManagerId = int.Parse(userId),
                 Name = request.Name,
                 Type = request.Type,
@@ -48,6 +61,13 @@ namespace Booking.WebApi.Controllers
                 Address = request.Address,
             });
 
+            return Ok();
+        }
+
+        [HttpPut]
+        [Authorize(Policy = IdentityConstants.ManagerUserPolicyName)]
+        public IActionResult Edit()
+        {
             return Ok();
         }
 

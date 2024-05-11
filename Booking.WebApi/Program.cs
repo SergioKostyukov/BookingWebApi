@@ -44,6 +44,9 @@ public class Program
             
             options.AddPolicy(IdentityConstants.ClientUserPolicyName,
                 policy => policy.RequireClaim(ClaimTypes.Role, IdentityConstants.ClientUserClaimName));
+
+            options.AddPolicy(IdentityConstants.ClientOrManagerUserPolicyName, 
+                policy => policy.RequireClaim(ClaimTypes.Role, IdentityConstants.ClientUserPolicyName, IdentityConstants.ManagerUserPolicyName));
         });
 
         builder.Services.AddHttpContextAccessor();

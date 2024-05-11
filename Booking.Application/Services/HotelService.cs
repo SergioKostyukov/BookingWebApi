@@ -20,6 +20,15 @@ internal class HotelService(BookingDbContext dbContext,
         return _mapper.Map<List<HotelViewDto>>(hotels);
     }
 
+    public async Task<List<HotelViewDto>> GetListByUserId(int userId)
+    {
+        var hotels = await _dbContext.Hotels
+            .Where(h => h.ManagerId == userId)
+            .ToListAsync();
+
+        return _mapper.Map<List<HotelViewDto>>(hotels);
+    }
+
     public async Task<HotelDto> Get(int id)
     {
         var hotel = await _dbContext.Hotels

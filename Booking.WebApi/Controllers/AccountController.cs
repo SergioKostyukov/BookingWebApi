@@ -13,5 +13,23 @@ namespace Booking.WebApi.Controllers
         {
             return Ok();
         }
+
+        [HttpGet("{userId}")]
+        public IActionResult GetByUserId(int userId)
+        {
+            return Ok();
+        }
+
+        [HttpPut]
+        public IActionResult Edit()
+        {
+            return Ok();
+        }
+
+        [HttpDelete]
+        public IActionResult Delete()
+        {
+            return Ok();
+        }
     }
 }

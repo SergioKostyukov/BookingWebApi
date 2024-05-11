@@ -1,6 +1,6 @@
 ﻿using Booking.Core.Enums;
 
-namespace Booking.WebApi.Models.Hotel;
+namespace Booking.WebApi.Models;
 
 public class AddHotelModel
 {
