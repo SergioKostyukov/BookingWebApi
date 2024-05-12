@@ -8,8 +8,6 @@ namespace Booking.Application.MappingProfiles
     {
         public UserProfile()
         {
-            CreateMap<User, UserIdentityDto>();
-            CreateMap<UserRegisterDto, User>();
             CreateMap<User, UserDto>();
         }
     }

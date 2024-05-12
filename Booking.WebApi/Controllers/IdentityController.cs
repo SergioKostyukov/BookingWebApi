@@ -1,5 +1,5 @@
-﻿using Booking.Application.Dto;
-using Booking.Application.Interfaces;
+﻿using Booking.Identity.Dto;
+using Booking.Identity.Services;
 using Booking.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -8,16 +8,14 @@ namespace Booking.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class IdentityController(IIdentityService identityService,
-                                    IAccountService userService) : ControllerBase
+    public class IdentityController(IIdentityService identityService) : ControllerBase
     {
         private readonly IIdentityService _identityService = identityService;
-        private readonly IAccountService _accountService = userService;
 
         [HttpPost]
         public IActionResult Login(LoginModel model)
         {
-            var userData = _accountService.GetUserIdentity(model.Name, model.Password);
+            var userData = _identityService.GetUserIdentity(model.Name, model.Password);
 
             var token = _identityService.GenerateToken(userData);
 
@@ -36,7 +34,7 @@ namespace Booking.WebApi.Controllers
         {
             try
             {
-                await _accountService.Create(new UserRegisterDto
+                await _identityService.Create(new UserRegisterDto
                 {
                     Name = model.Name,
                     PhoneNumber = model.PhoneNumber,
@@ -45,7 +43,7 @@ namespace Booking.WebApi.Controllers
                     Password = model.Password,
                 });
 
-                var userData = _accountService.GetUserIdentity(model.Name, model.Password);
+                var userData = _identityService.GetUserIdentity(model.Name, model.Password);
 
                 var token = _identityService.GenerateToken(userData);
 

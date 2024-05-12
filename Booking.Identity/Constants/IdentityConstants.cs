@@ -1,4 +1,4 @@
-﻿namespace Booking.WebApi.Identity;
+﻿namespace Booking.WebApi.Identity.Constants;
 
 public class IdentityConstants
 {

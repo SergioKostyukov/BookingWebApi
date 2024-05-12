@@ -1,14 +1,10 @@
 using Booking.Application;
+using Booking.Identity;
 using Booking.Infrastructure.Data;
-using Booking.WebApi.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Security.Claims;
-using System.Text;
+using Booking.WebApi.Validations;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Booking.WebApi.Validations;
+using Microsoft.OpenApi.Models;
 
 namespace Booking;
 
@@ -22,38 +18,11 @@ public class Program
         // Add services related to storage using the configuration specified
         builder.Services.AddStorage(builder.Configuration);
 
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
-                    ValidAudience = builder.Configuration["Jwt:Issuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-                };
-            });
-
-        builder.Services.AddAuthorization(options =>
-        {
-            options.AddPolicy(IdentityConstants.AdminUserPolicyName,
-                policy => policy.RequireClaim(ClaimTypes.Role, IdentityConstants.AdminUserClaimName));
-
-            options.AddPolicy(IdentityConstants.ManagerUserPolicyName,
-                policy => policy.RequireClaim(ClaimTypes.Role, IdentityConstants.ManagerUserClaimName));
-
-            options.AddPolicy(IdentityConstants.ClientUserPolicyName,
-                policy => policy.RequireClaim(ClaimTypes.Role, IdentityConstants.ClientUserClaimName));
-
-            options.AddPolicy(IdentityConstants.ClientOrManagerUserPolicyName,
-                policy => policy.RequireClaim(ClaimTypes.Role, IdentityConstants.ClientUserPolicyName, IdentityConstants.ManagerUserPolicyName));
-        });
+        builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 
         builder.Services.AddHttpContextAccessor();
 
+        builder.Services.AddIdentityServices();
         builder.Services.AddServices(builder.Configuration);
 
         builder.Services.AddFluentValidation();

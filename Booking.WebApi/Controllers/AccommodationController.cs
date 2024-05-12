@@ -1,6 +1,6 @@
 ﻿using Booking.Application.Dto;
 using Booking.Application.Interfaces;
-using Booking.WebApi.Identity;
+using Booking.WebApi.Identity.Constants;
 using Booking.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

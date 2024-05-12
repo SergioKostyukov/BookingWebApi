@@ -1,6 +1,6 @@
 ﻿using Booking.Core.Enums;
 
-namespace Booking.Application.Dto;
+namespace Booking.Identity.Dto;
 
 public class UserIdentityDto
 {
