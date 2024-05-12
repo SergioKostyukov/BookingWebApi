@@ -15,6 +15,10 @@ namespace Booking.WebApi.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
         private readonly IHotelService _hotelService = hotelService;
 
+        /// <summary>
+        /// Retrieves a list of all hotels.
+        /// Policy requirements: none 
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetList()
         {
@@ -23,6 +27,10 @@ namespace Booking.WebApi.Controllers
             return Ok(new { Hotels = hotels });
         }
 
+        /// <summary>
+        /// Retrieves a list of hotels managed by the currently authenticated user.
+        /// Policy requirements: Managers only
+        /// </summary>
         [HttpGet]
         [Authorize(Policy = IdentityConstants.ManagerUserPolicyName)]
         public async Task<IActionResult> GetMyHotelsList()
@@ -35,6 +43,11 @@ namespace Booking.WebApi.Controllers
             return Ok(new { Hotels = hotels });
         }
 
+        /// <summary>
+        /// Retrieves a specific hotel by its ID.
+        /// Policy requirements: none
+        /// </summary>
+        /// <param name="id">The ID of the hotel to retrieve.</param>
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -43,6 +56,11 @@ namespace Booking.WebApi.Controllers
             return Ok(new { Hotel = hotel });
         }
 
+        /// <summary>
+        /// Adds a new hotel.
+        /// Policy requirements: Managers only
+        /// </summary>
+        /// <param name="model">The model containing information about the new hotel.</param>
         [HttpPost]
         [Authorize(Policy = IdentityConstants.ManagerUserPolicyName)]
         public async Task<IActionResult> Add(AddHotelModel model)
@@ -64,6 +82,11 @@ namespace Booking.WebApi.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Updates an existing hotel.
+        /// Policy requirements: Managers only
+        /// </summary>
+        /// <param name="model">The model containing updated information about the hotel.</param>
         [HttpPut]
         [Authorize(Policy = IdentityConstants.ManagerUserPolicyName)]
         public async Task<IActionResult> Update(UpdateHotelModel model)
@@ -81,6 +104,11 @@ namespace Booking.WebApi.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Deletes a hotel by its ID.
+        /// Policy requirements: Managers only
+        /// </summary>
+        /// <param name="id">The ID of the hotel to delete.</param>
         [HttpDelete("{id}")]
         [Authorize(Policy = IdentityConstants.ManagerUserPolicyName)]
         public async Task<IActionResult> Delete(int id)

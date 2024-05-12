@@ -17,11 +17,17 @@ public class RegisterModelValidator : AbstractValidator<RegisterModel>
             .EmailAddress()
             .WithMessage("Invalid email format.");
 
+        RuleFor(x => x.Role)
+            .NotEmpty().When(x => x.Role != 0)
+            .WithMessage("Role field is required.")
+            .IsInEnum()
+            .WithMessage("Invalid UserRole.");
+
         RuleFor(x => x.PhoneNumber)
             .NotEmpty()
             .WithMessage("PhoneNumber field is required.")
             .Matches(@"^\+\d{12}$")
-            .WithMessage("Invalid phone number format.");
+            .WithMessage("Invalid phone number format. (Correct from is +012345678901)");
 
         RuleFor(x => x.Password)
             .NotEmpty()

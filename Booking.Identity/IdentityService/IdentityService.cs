@@ -1,13 +1,13 @@
-﻿using Booking.Identity.Dto;
+﻿using AutoMapper;
+using Booking.Core.Entities;
+using Booking.Core.Enums;
+using Booking.Identity.Dto;
+using Booking.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Booking.Core.Enums;
-using AutoMapper;
-using Booking.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-using Booking.Core.Entities;
 
 namespace Booking.Identity.Services;
 
@@ -16,12 +16,30 @@ internal class IdentityService(BookingDbContext dbContext,
 {
     private readonly BookingDbContext _dbContext = dbContext;
     private readonly IMapper _mapper = mapper;
-
-    public UserIdentityDto GetUserIdentity(string userName, string password)
+    
+    public async Task Register(UserRegisterDto request)
     {
-        var userData = _dbContext.Users
+        request.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
+        request.Email = request.Email.ToLower();
+
+        bool isNameUnique = await _dbContext.Users.AllAsync(u => u.Name != request.Name);
+        if (!isNameUnique)
+        {
+            throw new Exception("User with this name already exists.");
+        }
+
+        var user = _mapper.Map<User>(request);
+        user.CreatedDate = DateTime.UtcNow;
+
+        await _dbContext.Users.AddAsync(user);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<UserIdentityDto> GetUserIdentity(string userName, string password)
+    {
+        var userData = await _dbContext.Users
             .Where(u => u.Name == userName)
-            .FirstOrDefault();
+            .FirstOrDefaultAsync();
 
         if (userData is not null)
         {
@@ -36,26 +54,9 @@ internal class IdentityService(BookingDbContext dbContext,
         throw new Exception("User not found or password incorrect.");
     }
 
-    public async Task Create(UserRegisterDto request)
-    {
-        request.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
-        request.Email = request.Email.ToLower();
-
-        bool isNameUnique = await _dbContext.Users.AllAsync(u => u.Name != request.Name);
-        if (!isNameUnique)
-        {
-            throw new Exception("User with this name already exists.");
-        }
-
-        var user = _mapper.Map<User>(request);
-        user.CreatedDate = DateTime.UtcNow;
-
-        _dbContext.Users.Add(user);
-        await _dbContext.SaveChangesAsync();
-    }
-
     public string GenerateToken(UserIdentityDto request)
     {
+        // It's not a good practice to keep sensitive data here, but for a test case it might be
         var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Kjf2gj98Sd98SdHrCAsdUwJkNcnKdF8SECRET"));
 
         var claims = new List<Claim>

@@ -24,7 +24,7 @@ public class OrderConfirmModelValidator : AbstractValidator<OrderConfirmModel>
             .WithMessage("EndTime must be greater than StartTime.");
 
         RuleFor(x => x.PaymentType)
-            .NotEmpty()
+            .NotEmpty().When(x => x.PaymentType != 0)
             .WithMessage("PaymentType field is required.")
             .IsInEnum()
             .WithMessage("Invalid PaymentType.");

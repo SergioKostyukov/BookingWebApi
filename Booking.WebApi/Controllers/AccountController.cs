@@ -13,6 +13,10 @@ namespace Booking.WebApi.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
         private readonly IAccountService _accountService = accountService;
 
+        /// <summary>
+        /// Retrieves the currently authenticated user's information.
+        /// Policy requirements: Authorized users only 
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -24,6 +28,11 @@ namespace Booking.WebApi.Controllers
             return Ok(new { User = user });
         }
 
+        /// <summary>
+        /// Retrieves user information by their ID.
+        /// Policy requirements: Authorized users only 
+        /// </summary>
+        /// <param name="userId">The ID of the user to retrieve.</param>
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetByUserId(int userId)
         {
@@ -32,6 +41,11 @@ namespace Booking.WebApi.Controllers
             return Ok(new { User = user });
         }
 
+        /// <summary>
+        /// Deletes a user by their ID.
+        /// Policy requirements: Authorized users only 
+        /// </summary>
+        /// <param name="id">The ID of the user to delete.</param>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

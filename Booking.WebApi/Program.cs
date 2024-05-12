@@ -25,13 +25,17 @@ public class Program
         builder.Services.AddIdentityServices();
         builder.Services.AddServices(builder.Configuration);
 
+        // Add FluentValidation for request validations
         builder.Services.AddFluentValidation();
         builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
+
+        // Configure Swagger generation
         builder.Services.AddSwaggerGen(options =>
         {
+            // Add security definition for JWT Bearer token
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 Description = "Please enter token.",
@@ -42,6 +46,7 @@ public class Program
                 Scheme = "Bearer"
             });
 
+            // Add security requirement for JWT Bearer token
             options.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {

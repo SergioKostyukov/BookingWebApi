@@ -49,12 +49,7 @@ internal class HotelService(BookingDbContext dbContext,
         var hotel = await _dbContext.Hotels
             .FindAsync(request.Id) ?? throw new InvalidOperationException("Hotel not found");
 
-        hotel.Name = request.Name;
-        hotel.Type = request.Type;
-        hotel.Description = request.Description;
-        hotel.Country = request.Country;
-        hotel.City = request.City;
-        hotel.Address = request.Address;
+        _mapper.Map(request, hotel);
 
         await _dbContext.SaveChangesAsync();
     }

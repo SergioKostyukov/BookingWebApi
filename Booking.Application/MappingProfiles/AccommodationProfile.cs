@@ -9,6 +9,7 @@ public class AccommodationProfile : Profile
     public AccommodationProfile()
     {
         CreateMap<AccommodationAddDto, Accommodation>();
+        CreateMap<AccommodationUpdateDto, Accommodation>();
         CreateMap<Accommodation, AccommodationDto>();
         CreateMap<Accommodation, AccommodationViewDto>();
     }

@@ -9,6 +9,7 @@ public class HotelProfile : Profile
     public HotelProfile()
     {
         CreateMap<HotelAddDto, Hotel>();
+        CreateMap<HotelUpdateDto, Hotel>();
         CreateMap<Hotel, HotelDto>();
         CreateMap<Hotel, HotelViewDto>();
     }

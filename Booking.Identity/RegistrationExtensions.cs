@@ -14,6 +14,7 @@ public static class RegistrationExtensions
 {
     public static IServiceCollection AddAuthenticationAndAuthorization(this IServiceCollection services, IConfiguration configuration)
     {
+        // Configure JWT authentication
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -29,20 +30,16 @@ public static class RegistrationExtensions
                 };
             });
 
-        services.AddAuthorization(options =>
-        {
-            options.AddPolicy(IdentityConstants.AdminUserPolicyName,
-                policy => policy.RequireClaim(ClaimTypes.Role, IdentityConstants.AdminUserClaimName));
-
-            options.AddPolicy(IdentityConstants.ManagerUserPolicyName,
-                policy => policy.RequireClaim(ClaimTypes.Role, IdentityConstants.ManagerUserClaimName));
-
-            options.AddPolicy(IdentityConstants.ClientUserPolicyName,
-                policy => policy.RequireClaim(ClaimTypes.Role, IdentityConstants.ClientUserClaimName));
-
-            options.AddPolicy(IdentityConstants.ClientOrManagerUserPolicyName,
+        // Configure authorization policies
+        services.AddAuthorizationBuilder()
+            .AddPolicy(IdentityConstants.AdminUserPolicyName,
+                policy => policy.RequireClaim(ClaimTypes.Role, IdentityConstants.AdminUserClaimName))
+            .AddPolicy(IdentityConstants.ManagerUserPolicyName,
+                policy => policy.RequireClaim(ClaimTypes.Role, IdentityConstants.ManagerUserClaimName))
+            .AddPolicy(IdentityConstants.ClientUserPolicyName, policy =>
+                policy.RequireClaim(ClaimTypes.Role, IdentityConstants.ClientUserClaimName))
+            .AddPolicy(IdentityConstants.ClientOrManagerUserPolicyName,
                 policy => policy.RequireClaim(ClaimTypes.Role, IdentityConstants.ClientUserPolicyName, IdentityConstants.ManagerUserPolicyName));
-        });
 
         return services;
     }

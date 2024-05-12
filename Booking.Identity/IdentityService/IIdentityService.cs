@@ -1,11 +1,12 @@
 ﻿using Booking.Identity.Dto;
+using Microsoft.AspNetCore.Identity.Data;
 
 namespace Booking.Identity.Services
 {
     public interface IIdentityService
     {
-        public UserIdentityDto GetUserIdentity(string userName, string password);
-        public Task Create(UserRegisterDto request);
+        public Task Register(UserRegisterDto request);
+        public Task<UserIdentityDto> GetUserIdentity(string userName, string password);
         public string GenerateToken(UserIdentityDto request);
     }
 }

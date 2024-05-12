@@ -16,7 +16,8 @@ namespace Booking.WebApi.Controllers
         private readonly IOrderService _orderService = orderService;
 
         /// <summary>
-        /// Policy requirements: Clients only 
+        /// Retrieves a list of all orders (bookings) for the client.
+        /// Policy requirements: Clients only
         /// </summary>
         /// <returns>List of all client orders (bookings)</returns>
         [HttpGet]
@@ -31,6 +32,10 @@ namespace Booking.WebApi.Controllers
             return Ok(new { Orders = orders });
         }
 
+        /// <summary>
+        /// Retrieves a list of orders (bookings) assigned to the manager.
+        /// Policy requirements: Managers only
+        /// </summary>
         [HttpGet]
         [Authorize(Policy = IdentityConstants.ManagerUserPolicyName)]
         public async Task<IActionResult> GetListOrdersToMe()
@@ -43,6 +48,11 @@ namespace Booking.WebApi.Controllers
             return Ok(new { Orders = orders });
         }
 
+        /// <summary>
+        /// Retrieves a specific order (booking) by its ID.
+        /// Policy requirements: Clients or Managers only
+        /// </summary>
+        /// <param name="id">The ID of the order to retrieve.</param>
         [HttpGet("{id}")]
         [Authorize(Policy = IdentityConstants.ClientOrManagerUserPolicyName)]
         public async Task<IActionResult> Get(int id)
@@ -63,6 +73,11 @@ namespace Booking.WebApi.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Adds an accommodation to an existing order (booking).
+        /// Policy requirements: Clients only
+        /// </summary>
+        /// <param name="id">The ID of the accommodation to add.</param>
         [HttpPost("{id}")]
         [Authorize(Policy = IdentityConstants.ClientUserPolicyName)]
         public async Task<IActionResult> AddAccommodationToOrder(int id)
@@ -79,6 +94,11 @@ namespace Booking.WebApi.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Confirms an order (booking).
+        /// Policy requirements: Clients only
+        /// </summary>
+        /// <param name="model">The model containing confirmation information.</param>
         [HttpPost]
         [Authorize(Policy = IdentityConstants.ClientUserPolicyName)]
         public async Task<IActionResult> Confirm(OrderConfirmModel model)
@@ -95,6 +115,11 @@ namespace Booking.WebApi.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Confirms payment for an order (booking).
+        /// Policy requirements: Clients only
+        /// </summary>
+        /// <param name="id">The ID of the order to confirm payment for.</param>
         [HttpPost]
         [Authorize(Policy = IdentityConstants.ClientUserPolicyName)]
         public async Task<IActionResult> ConfirmPayment(int id)
@@ -104,6 +129,12 @@ namespace Booking.WebApi.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Deletes an accommodation from an order (booking).
+        /// Policy requirements: Clients or Managers only
+        /// </summary>
+        /// <param name="orderId">The ID of the order.</param>
+        /// <param name="accommodationId">The ID of the accommodation to delete.</param>
         [HttpDelete]
         [Authorize(Policy = IdentityConstants.ClientOrManagerUserPolicyName)]
         public async Task<IActionResult> DeleteAccommodationFromOrder([FromQuery] int orderId, [FromQuery] int accommodationId)
@@ -113,6 +144,11 @@ namespace Booking.WebApi.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Deletes an order (booking) by its ID.
+        /// Policy requirements: Clients or Managers only
+        /// </summary>
+        /// <param name="id">The ID of the order to delete.</param>
         [HttpDelete("{id}")]
         [Authorize(Policy = IdentityConstants.ClientOrManagerUserPolicyName)]
         public async Task<IActionResult> Delete(int id)

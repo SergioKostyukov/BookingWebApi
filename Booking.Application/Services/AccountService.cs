@@ -2,7 +2,6 @@
 using Booking.Application.Dto;
 using Booking.Application.Interfaces;
 using Booking.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Application.Services;
 
@@ -15,8 +14,7 @@ internal class AccountService(BookingDbContext dbContext,
     public async Task<UserDto> Get(int id)
     {
         var user = await _dbContext.Users
-            .Where(u => u.Id == id)
-            .FirstOrDefaultAsync();
+            .FindAsync(id) ?? throw new InvalidOperationException("User not found");
 
         return _mapper.Map<UserDto>(user);
     }

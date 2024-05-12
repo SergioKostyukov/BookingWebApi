@@ -12,10 +12,14 @@ namespace Booking.WebApi.Controllers
     {
         private readonly IIdentityService _identityService = identityService;
 
+        /// <summary>
+        /// Logs in a user with the provided credentials.
+        /// </summary>
+        /// <param name="model">The model containing user login credentials.</param>
         [HttpPost]
-        public IActionResult Login(LoginModel model)
+        public async Task<IActionResult> Login(LoginModel model)
         {
-            var userData = _identityService.GetUserIdentity(model.Name, model.Password);
+            var userData = await _identityService.GetUserIdentity(model.Name, model.Password);
 
             var token = _identityService.GenerateToken(userData);
 
@@ -29,12 +33,16 @@ namespace Booking.WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Registers a new user with the provided information.
+        /// </summary>
+        /// <param name="model">The model containing user registration information.</param>
         [HttpPost]
         public async Task<IActionResult> Register(RegisterModel model)
         {
             try
             {
-                await _identityService.Create(new UserRegisterDto
+                await _identityService.Register(new UserRegisterDto
                 {
                     Name = model.Name,
                     PhoneNumber = model.PhoneNumber,
@@ -43,7 +51,7 @@ namespace Booking.WebApi.Controllers
                     Password = model.Password,
                 });
 
-                var userData = _identityService.GetUserIdentity(model.Name, model.Password);
+                var userData = await _identityService.GetUserIdentity(model.Name, model.Password);
 
                 var token = _identityService.GenerateToken(userData);
 

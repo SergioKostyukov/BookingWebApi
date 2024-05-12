@@ -16,7 +16,7 @@ public class UpdateHotelModelValidator : AbstractValidator<UpdateHotelModel>
             .WithMessage("Name field is required.");
 
         RuleFor(x => x.Type)
-            .NotEmpty()
+            .NotEmpty().When(x => x.Type != 0)
             .WithMessage("Type field is required.")
             .IsInEnum()
             .WithMessage("Invalid HotelType.");

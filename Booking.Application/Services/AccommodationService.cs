@@ -45,10 +45,7 @@ internal class AccommodationService(BookingDbContext dbContext,
         var accommodation = await _dbContext.Accommodations
             .FindAsync(request.Id) ?? throw new InvalidOperationException("Accommodation not found");
 
-        accommodation.Name = request.Name;
-        accommodation.Type = request.Type;
-        accommodation.Description = request.Description;
-        accommodation.Price = request.Price;
+        _mapper.Map(request, accommodation);
 
         await _dbContext.SaveChangesAsync();
     }

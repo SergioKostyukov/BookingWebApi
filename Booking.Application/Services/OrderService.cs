@@ -36,6 +36,7 @@ internal class OrderService(BookingDbContext dbContext,
 
     public async Task<(OrderDto, List<OrderListDto>)> Get(int id)
     {
+        // Get order details as well as a list of items included in that order
         var orderData = await (
             from order in _dbContext.Orders
             join orderItem in _dbContext.OrdersLists on order.Id equals orderItem.OrderId into orderItemsGroup
@@ -55,6 +56,7 @@ internal class OrderService(BookingDbContext dbContext,
 
     public async Task Add(OrderAddDto request)
     {
+        // Check if there is an existing order for the customer and hotel
         var hotelId = await _dbContext.Accommodations
             .Where(a => a.Id == request.AccommodationId)
             .Select(a => a.HotelId)
@@ -77,24 +79,28 @@ internal class OrderService(BookingDbContext dbContext,
 
             await _dbContext.SaveChangesAsync();
 
+            // Retrieve the newly created order
             order = await _dbContext.Orders
-            .Where(x => x.CustomerId == request.CustomerId && x.HotelId == hotelId)
-            .FirstAsync();
+                .Where(x => x.CustomerId == request.CustomerId && x.HotelId == hotelId)
+                .FirstAsync();
         }
 
+        // Add a new entry to the order list for the accommodation
         _dbContext.OrdersLists.Add(new OrderList
         {
             AccommodationId = request.AccommodationId,
             OrderId = order.Id
         });
 
+        // Update the check amount of the order by adding the price of the accommodation
         var accommodationPrice = await _dbContext.Accommodations
-                .Where(a => a.Id == request.AccommodationId)
-                .Select(a => a.Price)
-                .FirstAsync();
+            .Where(a => a.Id == request.AccommodationId)
+            .Select(a => a.Price)
+            .FirstAsync();
 
         order.CheckAmount += accommodationPrice;
 
+        // Update the order in the database
         _dbContext.Orders.Update(order);
 
         await _dbContext.SaveChangesAsync();
@@ -131,21 +137,23 @@ internal class OrderService(BookingDbContext dbContext,
 
     public async Task DeleteAccommodationFromOrder(int orderId, int accommodationId)
     {
+        // Delete the accommodation from the order lists
         await _dbContext.OrdersLists
                 .Where(o => o.OrderId == orderId && o.AccommodationId == accommodationId)
                 .ExecuteDeleteAsync();
 
+        // Reducing the value of the check amount according to the change in orders
         var accommodationPrice = await _dbContext.Accommodations
                 .Where(a => a.Id == accommodationId)
                 .Select(a => a.Price)
                 .FirstAsync();
 
         var order = await _dbContext.Orders
-            .Where(o => o.Id == orderId)
-            .FirstOrDefaultAsync();
+            .FindAsync(orderId) ?? throw new InvalidOperationException("Order not found");
 
         order.CheckAmount -= accommodationPrice;
 
+        // If the check amount is zero or negative, remove the order completely, otherwise update order data
         if (order.CheckAmount <= 0)
         {
             _dbContext.Remove(order);
@@ -160,6 +168,7 @@ internal class OrderService(BookingDbContext dbContext,
 
     public async Task Delete(int id)
     {
+        // Remove all items from the order list 
         var order = await _dbContext.Orders
             .FindAsync(id) ?? throw new InvalidOperationException("Order not found");
 
@@ -167,8 +176,7 @@ internal class OrderService(BookingDbContext dbContext,
                 .Where(o => o.OrderId == id)
                 .ExecuteDeleteAsync();
 
-        _dbContext.OrdersLists.RemoveRange();
-
+        // Delete the order itself
         _dbContext.Orders.Remove(order);
 
         await _dbContext.SaveChangesAsync();
